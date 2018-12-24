@@ -14,6 +14,8 @@ from os.path import splitext
 from setuptools import find_packages
 from setuptools import setup
 
+from sys import version_info
+
 
 def read(*names, **kwargs):
     return io.open(
@@ -21,6 +23,10 @@ def read(*names, **kwargs):
         encoding=kwargs.get('encoding', 'utf8')
     ).read()
 
+
+install_requires = ['enum34']
+if version_info[0] < 3:
+    install_requires.append('future')
 
 setup(
     name='asn1',
@@ -61,9 +67,7 @@ setup(
     keywords=[
         # eg: 'keyword1', 'keyword2', 'keyword3',
     ],
-    install_requires=[
-        # eg: 'aspectlib==1.1.1', 'six>=1.7',
-    ],
+    install_requires=install_requires,
     extras_require={
         # eg:
         #   'rst': ['docutils>=0.11'],
