@@ -155,9 +155,13 @@ class Encoder(object):
         if self.m_stack is None:
             raise Error('Encoder not initialized. Call start() first.')
         if nr is None:
-            if isinstance(value, int):
+            if isinstance(value, bool):
+                nr = Numbers.Boolean
+            elif isinstance(value, int):
                 nr = Numbers.Integer
-            elif isinstance(value, str) or isinstance(value, bytes):
+            elif isinstance(value, str):
+                nr = Numbers.PrintableString
+            elif isinstance(value, bytes):
                 nr = Numbers.OctetString
             elif value is None:
                 nr = Numbers.Null
