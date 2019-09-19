@@ -105,7 +105,7 @@ If you want to encode data and retrieve its DER-encoded representation, use code
 
   encoder = asn1.Encoder()
   encoder.start()
-  encoder.write('1.2.3', asn1.ObjectIdentifier)
+  encoder.write('1.2.3', asn1.Numbers.ObjectIdentifier)
   encoded_bytes = encoder.output()
 
 
