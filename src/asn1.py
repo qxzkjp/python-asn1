@@ -256,6 +256,8 @@ class Encoder(object):
             value = self._encode_integer(value)
         elif nr in (Numbers.OctetString, Numbers.PrintableString):
             value = self._encode_octet_string(value)
+        elif nr == Numbers.BitString:
+            value = self._encode_bit_string(value)
         elif nr == Numbers.Boolean:
             value = self._encode_boolean(value)
         elif nr == Numbers.Null:
@@ -308,6 +310,13 @@ class Encoder(object):
             return value.encode('utf-8')
         else:
             return value
+
+    @staticmethod
+    def _encode_bit_string(value):  # type: (object) -> bytes
+        """Encode a bitstring. Assumes no unused bytes."""
+        # Use the primitive encoding
+        assert isinstance(value, bytes)
+        return b'\x00' + value
 
     @staticmethod
     def _encode_null():  # type: () -> bytes

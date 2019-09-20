@@ -131,6 +131,13 @@ class TestEncoder(object):
         res = enc.output()
         assert res == b'\x04\x03foo'
 
+    def test_bitstring(self):
+        enc = asn1.Encoder()
+        enc.start()
+        enc.write(b'\x12\x34\x56', asn1.Numbers.BitString)
+        res = enc.output()
+        assert res == b'\x03\x04\x00\x12\x34\x56'
+
     def test_printable_string(self):
         enc = asn1.Encoder()
         enc.start()
