@@ -148,7 +148,7 @@ class TestEncoder(object):
     def test_unicode_octet_string(self):
         enc = asn1.Encoder()
         enc.start()
-        enc.write(u'fooé')
+        enc.write(u'fooé', nr=asn1.Numbers.OctetString)
         res = enc.output()
         assert res == b'\x04\x05\x66\x6f\x6f\xc3\xa9'
 
@@ -312,6 +312,22 @@ class TestEncoder(object):
         assert_raises(asn1.Error, enc.write, 'foo', asn1.Numbers.ObjectIdentifier)
         assert_raises(asn1.Error, enc.write, 'foo.bar', asn1.Numbers.ObjectIdentifier)
 
+    def test_default_encding(self):
+        " Check that the encoder implicitly chooses the correct asn1 type "
+        def check_defaults(value, number):
+            default, explicit = asn1.Encoder(), asn1.Encoder()
+            default.start()
+            explicit.start()
+            default.write(value)
+            explicit.write(value, number)
+            assert default.output() == explicit.output(), \
+                    "default asn1 type for '{}' should be {!r}".format(type(value).__name__, number)
+
+        check_defaults(True, asn1.Numbers.Boolean)
+        check_defaults(12345, asn1.Numbers.Integer)
+        check_defaults(b"byte string \x00\xff\xba\xdd", asn1.Numbers.OctetString)
+        check_defaults(u"unicode string \U0001f4a9", asn1.Numbers.PrintableString)
+        check_defaults(None, asn1.Numbers.Null)
 
 class TestDecoder(object):
     """Test suite for ASN1 Decoder."""
