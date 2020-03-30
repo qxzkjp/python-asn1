@@ -9,8 +9,12 @@ source =
     asn1
     tests
 parallel = true
+data_file = .coverage_data/coverage
 
 [report]
 show_missing = true
 precision = 2
 omit = *migrations*
+
+[xml]
+output = dist/coverage.xml

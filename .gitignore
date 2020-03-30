@@ -64,5 +64,5 @@ docs/_build
 *.bak
 
 .python-version
-
 *.private
+.coverage_data/
