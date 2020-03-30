@@ -4,3 +4,11 @@ tox
 nose
 flake8
 isort
+docutils
+check-manifest
+readme-renderer
+pygments
+sphinx
+sphinx_rtd_theme
+coverage
+
