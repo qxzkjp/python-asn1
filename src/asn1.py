@@ -328,7 +328,7 @@ class Encoder(object):
         """Encode a Null value."""
         return bytes(b'')
 
-    _re_oid = re.compile('^[0-9]+(\.[0-9]+)+$')
+    _re_oid = re.compile(r'^[0-9]+(\.[0-9]+)+$')
 
     def _encode_object_identifier(self, oid):  # type: (str) -> bytes
         """Encode an object identifier."""
@@ -634,6 +634,6 @@ class Decoder(object):
         return str('.'.join(result))
 
     @staticmethod
-    def _decode_printable_string(bytes_data):  # type: (bytes) -> unicode
+    def _decode_printable_string(bytes_data):  # type: (bytes) -> str
         """Decode a printable string."""
         return bytes_data.decode('utf-8')
