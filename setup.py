@@ -10,11 +10,10 @@ from os.path import basename
 from os.path import dirname
 from os.path import join
 from os.path import splitext
+from sys import version_info
 
 from setuptools import find_packages
 from setuptools import setup
-
-from sys import version_info
 
 
 def read(*names, **kwargs):

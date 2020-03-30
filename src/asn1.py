@@ -23,6 +23,7 @@ from builtins import int
 from builtins import range
 from builtins import str
 from enum import IntEnum
+from numbers import Number
 
 __version__ = "2.2.0"
 
