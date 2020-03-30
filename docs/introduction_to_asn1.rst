@@ -108,13 +108,13 @@ References
 
 .. _ITU-T Study Group 17 - Languages for Telecommunication Systems:
 .. _Abstract Syntax Notation One:
-.. _ASN1: http://www.itu.int/ITU-T/studygroups/com17/languages/
+.. _ASN1: https://www.itu.int/en/ITU-T/studygroups/2017-2020/17/Pages/default.aspx
 
 .. _External Data Representation Standard:
 .. _XDR: https://tools.ietf.org/html/rfc4506
 
 .. _ISO\/IEC 14977\: Information technology -- Syntactic metalanguage -- Extended BNF:
-.. _EBNF: http://standards.iso.org/ittf/PubliclyAvailableStandards/s026153_ISO_IEC_14977_1996(E).zip
+.. _EBNF: https://standards.iso.org/ittf/PubliclyAvailableStandards/s026153_ISO_IEC_14977_1996(E).zip
 
 * **ASN.1**
   `ITU-T Study Group 17 - Languages for Telecommunication Systems`_

@@ -6,7 +6,7 @@
     :target: https://readthedocs.org/projects/python-asn1
     :alt: Documentation Status
 
-.. |travis| image:: https://travis-ci.org/andrivet/python-asn1.svg?branch=master
+.. |travis| image:: https://api.travis-ci.org/andrivet/python-asn1.svg?branch=master
     :alt: Travis-CI Build Status
     :target: https://travis-ci.org/andrivet/python-asn1
 
@@ -18,7 +18,7 @@
     :alt: Requirements Status
     :target: https://requires.io/github/andrivet/python-asn1/requirements/?branch=master
 
-.. |codecov| image:: https://codecov.io/github/andrivet/python-asn1/coverage.svg?branch=master
+.. |codecov| image:: https://codecov.io/gh/andrivet/python-asn1/branch/master/graphs/badge.svg?branch=master
     :alt: Coverage Status
     :target: https://codecov.io/github/andrivet/python-asn1
 
@@ -28,19 +28,19 @@
 
 .. |version| image:: https://img.shields.io/pypi/v/asn1.svg?style=flat
     :alt: PyPI Package latest release
-    :target: https://pypi.python.org/pypi/asn1
+    :target: https://pypi.org/project/asn1/
 
 .. |wheel| image:: https://img.shields.io/pypi/wheel/asn1.svg?style=flat
     :alt: PyPI Wheel
-    :target: https://pypi.python.org/pypi/asn1
+    :target: https://pypi.org/project/asn1/
 
 .. |supported-versions| image:: https://img.shields.io/pypi/pyversions/asn1.svg?style=flat
     :alt: Supported versions
-    :target: https://pypi.python.org/pypi/asn1
+    :target: https://pypi.org/project/asn1/
 
 .. |supported-implementations| image:: https://img.shields.io/pypi/implementation/asn1.svg?style=flat
     :alt: Supported implementations
-    :target: https://pypi.python.org/pypi/asn1
+    :target: https://pypi.org/project/asn1/
 
 
 .. end-badges

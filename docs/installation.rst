@@ -2,7 +2,7 @@
 Installation
 ============
 
-Install from `PyPi <https://pypi.python.org/pypi/asn1>`_ with the following:
+Install from `PyPi <https://pypi.org/project/asn1/>`_ with the following:
 
 .. code-block:: sh
 
