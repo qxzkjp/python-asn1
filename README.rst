@@ -22,10 +22,6 @@
     :alt: Coverage Status
     :target: https://codecov.io/github/andrivet/python-asn1
 
-.. |coveralls| image:: https://coveralls.io/repos/github/andrivet/python-asn1/badge.svg?branch=master
-    :alt: Coverage Status
-    :target: https://coveralls.io/github/andrivet/python-asn1?branch=master
-
 .. |version| image:: https://img.shields.io/pypi/v/asn1.svg?style=flat
     :alt: PyPI Package latest release
     :target: https://pypi.org/project/asn1/
@@ -49,7 +45,7 @@
 Overview
 ========
 
-Python-ASN1 is a simple ASN.1 encoder and decoder for Python 2.6+ and 3.3+.
+Python-ASN1 is a simple ASN.1 encoder and decoder for Python 2.7 and 3.5+.
 
 Features
 ========
