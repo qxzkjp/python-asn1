@@ -1,7 +1,6 @@
 -r requirements.txt
 pytest
 tox
-nose
 flake8
 isort
 docutils

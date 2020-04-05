@@ -14,7 +14,7 @@ from __future__ import unicode_literals
 
 from builtins import int
 
-from nose.tools import assert_raises
+import pytest
 
 import asn1
 
@@ -287,30 +287,30 @@ class TestEncoder(object):
 
     def test_error_init(self):
         enc = asn1.Encoder()
-        assert_raises(asn1.Error, enc.enter, asn1.Numbers.Sequence)
-        assert_raises(asn1.Error, enc.leave)
-        assert_raises(asn1.Error, enc.write, 1)
-        assert_raises(asn1.Error, enc.output)
+        pytest.raises(asn1.Error, enc.enter, asn1.Numbers.Sequence)
+        pytest.raises(asn1.Error, enc.leave)
+        pytest.raises(asn1.Error, enc.write, 1)
+        pytest.raises(asn1.Error, enc.output)
 
     def test_error_stack(self):
         enc = asn1.Encoder()
         enc.start()
-        assert_raises(asn1.Error, enc.leave)
+        pytest.raises(asn1.Error, enc.leave)
         enc.enter(asn1.Numbers.Sequence)
-        assert_raises(asn1.Error, enc.output)
+        pytest.raises(asn1.Error, enc.output)
         enc.leave()
-        assert_raises(asn1.Error, enc.leave)
+        pytest.raises(asn1.Error, enc.leave)
 
     def test_error_object_identifier(self):
         enc = asn1.Encoder()
         enc.start()
-        assert_raises(asn1.Error, enc.write, '1', asn1.Numbers.ObjectIdentifier)
-        assert_raises(asn1.Error, enc.write, '40.2.3', asn1.Numbers.ObjectIdentifier)
-        assert_raises(asn1.Error, enc.write, '1.40.3', asn1.Numbers.ObjectIdentifier)
-        assert_raises(asn1.Error, enc.write, '1.2.3.', asn1.Numbers.ObjectIdentifier)
-        assert_raises(asn1.Error, enc.write, '.1.2.3', asn1.Numbers.ObjectIdentifier)
-        assert_raises(asn1.Error, enc.write, 'foo', asn1.Numbers.ObjectIdentifier)
-        assert_raises(asn1.Error, enc.write, 'foo.bar', asn1.Numbers.ObjectIdentifier)
+        pytest.raises(asn1.Error, enc.write, '1', asn1.Numbers.ObjectIdentifier)
+        pytest.raises(asn1.Error, enc.write, '40.2.3', asn1.Numbers.ObjectIdentifier)
+        pytest.raises(asn1.Error, enc.write, '1.40.3', asn1.Numbers.ObjectIdentifier)
+        pytest.raises(asn1.Error, enc.write, '1.2.3.', asn1.Numbers.ObjectIdentifier)
+        pytest.raises(asn1.Error, enc.write, '.1.2.3', asn1.Numbers.ObjectIdentifier)
+        pytest.raises(asn1.Error, enc.write, 'foo', asn1.Numbers.ObjectIdentifier)
+        pytest.raises(asn1.Error, enc.write, 'foo.bar', asn1.Numbers.ObjectIdentifier)
 
     def test_default_encding(self):
         " Check that the encoder implicitly chooses the correct asn1 type "
@@ -605,19 +605,19 @@ class TestDecoder(object):
 
     def test_error_init(self):
         dec = asn1.Decoder()
-        assert_raises(asn1.Error, dec.peek)
-        assert_raises(asn1.Error, dec.read)
-        assert_raises(asn1.Error, dec.enter)
-        assert_raises(asn1.Error, dec.leave)
+        pytest.raises(asn1.Error, dec.peek)
+        pytest.raises(asn1.Error, dec.read)
+        pytest.raises(asn1.Error, dec.enter)
+        pytest.raises(asn1.Error, dec.leave)
 
     def test_error_stack(self):
         buf = b'\x30\x08\x02\x01\x01\x04\x03foo'
         dec = asn1.Decoder()
         dec.start(buf)
-        assert_raises(asn1.Error, dec.leave)
+        pytest.raises(asn1.Error, dec.leave)
         dec.enter()
         dec.leave()
-        assert_raises(asn1.Error, dec.leave)
+        pytest.raises(asn1.Error, dec.leave)
 
     def test_no_input(self):
         dec = asn1.Decoder()
@@ -629,64 +629,64 @@ class TestDecoder(object):
         buf = b'\x3f'
         dec = asn1.Decoder()
         dec.start(buf)
-        assert_raises(asn1.Error, dec.peek)
+        pytest.raises(asn1.Error, dec.peek)
         buf = b'\x3f\x83'
         dec.start(buf)
-        assert_raises(asn1.Error, dec.peek)
+        pytest.raises(asn1.Error, dec.peek)
 
     def test_error_no_length_bytes(self):
         buf = b'\x02'
         dec = asn1.Decoder()
         dec.start(buf)
-        assert_raises(asn1.Error, dec.read)
+        pytest.raises(asn1.Error, dec.read)
 
     def test_error_missing_length_bytes(self):
         buf = b'\x04\x82\xff'
         dec = asn1.Decoder()
         dec.start(buf)
-        assert_raises(asn1.Error, dec.read)
+        pytest.raises(asn1.Error, dec.read)
 
     def test_error_too_many_length_bytes(self):
         buf = b'\x04\xff' + b'\xff' * 0x7f
         dec = asn1.Decoder()
         dec.start(buf)
-        assert_raises(asn1.Error, dec.read)
+        pytest.raises(asn1.Error, dec.read)
 
     def test_error_no_value_bytes(self):
         buf = b'\x02\x01'
         dec = asn1.Decoder()
         dec.start(buf)
-        assert_raises(asn1.Error, dec.read)
+        pytest.raises(asn1.Error, dec.read)
 
     def test_error_missing_value_bytes(self):
         buf = b'\x02\x02\x01'
         dec = asn1.Decoder()
         dec.start(buf)
-        assert_raises(asn1.Error, dec.read)
+        pytest.raises(asn1.Error, dec.read)
 
     def test_error_non_normalized_positive_integer(self):
         buf = b'\x02\x02\x00\x01'
         dec = asn1.Decoder()
         dec.start(buf)
-        assert_raises(asn1.Error, dec.read)
+        pytest.raises(asn1.Error, dec.read)
 
     def test_error_non_normalized_negative_integer(self):
         buf = b'\x02\x02\xff\x80'
         dec = asn1.Decoder()
         dec.start(buf)
-        assert_raises(asn1.Error, dec.read)
+        pytest.raises(asn1.Error, dec.read)
 
     def test_error_non_normalised_object_identifier(self):
         buf = b'\x06\x02\x80\x01'
         dec = asn1.Decoder()
         dec.start(buf)
-        assert_raises(asn1.Error, dec.read)
+        pytest.raises(asn1.Error, dec.read)
 
     def test_error_object_identifier_with_too_large_first_component(self):
         buf = b'\x06\x02\x8c\x40'
         dec = asn1.Decoder()
         dec.start(buf)
-        assert_raises(asn1.Error, dec.read)
+        pytest.raises(asn1.Error, dec.read)
 
     def test_big_negative_integer(self):
         buf = b'\x02\x10\xff\x7f\x2b\x3a\x4d\xea\x48\x1e\x1f\x37\x7b\xa8\xbd\x7f\xb0\x16'
