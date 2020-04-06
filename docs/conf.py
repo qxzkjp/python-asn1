@@ -23,10 +23,10 @@ if os.getenv('SPELLCHECK'):
 source_suffix = '.rst'
 master_doc = 'index'
 project = 'Python-ASN1'
-year = '2007-2016'
+year = '2007-2020'
 author = 'Sebastien Andrivet'
 copyright = '{0}, {1}'.format(year, author)
-version = release = '2.2.0'
+version = release = '2.3.0'
 
 pygments_style = 'trac'
 templates_path = ['.']
