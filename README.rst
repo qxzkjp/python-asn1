@@ -51,7 +51,7 @@ Features
 ========
 
 - Support BER (parser) and DER (parser and generator) encoding
-- 100% python, compatible with version 2.6, 2.7, 3.3 and higher
+- 100% python, compatible with version 2.7, 3.5 and higher
 - Can be integrated by just including a file into your project
 
 
