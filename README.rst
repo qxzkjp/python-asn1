@@ -1,6 +1,6 @@
 .. start-badges
 
-|travis| |appveyor| |requires| |codecov| |coveralls| |docs| |version| |wheel| |supported-versions| |supported-implementations|
+|travis| |appveyor| |requires| |codecov| |docs| |version| |wheel| |supported-versions| |supported-implementations|
 
 .. |docs| image:: https://readthedocs.org/projects/python-asn1/badge/?style=flat
     :target: https://readthedocs.org/projects/python-asn1
