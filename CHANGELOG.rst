@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.3.1 (2020-04-06)
+------------------
+
+* No change in code, only in packaging and in texts (README, ...)
+
 2.3.0 (2020-04-05)
 ------------------
 
