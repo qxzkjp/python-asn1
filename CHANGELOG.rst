@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.4.0 (2020-06-23)
+
+* Fix #21 - Invalid decoding in non-Universal classes
+* Fix #57 - Invalid encoding of non-Universal classes
+
 2.3.1 (2020-04-06)
 ------------------
 
