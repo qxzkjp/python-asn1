@@ -155,6 +155,15 @@ class Encoder(object):
         """
         if self.m_stack is None:
             raise Error('Encoder not initialized. Call start() first.')
+
+        if typ is None:
+            typ = Types.Primitive
+        if cls is None:
+            cls = Classes.Universal
+
+        if cls != Classes.Universal and nr is None:
+            raise Error('Please specify a tag number (nr) when using classes Application, Context or Private')
+
         if nr is None:
             if isinstance(value, bool):
                 nr = Numbers.Boolean
@@ -166,11 +175,8 @@ class Encoder(object):
                 nr = Numbers.OctetString
             elif value is None:
                 nr = Numbers.Null
-        if typ is None:
-            typ = Types.Primitive
-        if cls is None:
-            cls = Classes.Universal
-        value = self._encode_value(nr, value)
+
+        value = self._encode_value(cls, nr, value)
         self._emit_tag(nr, typ, cls)
         self._emit_length(len(value))
         self._emit(value)
@@ -255,20 +261,22 @@ class Encoder(object):
         assert isinstance(s, bytes)
         self.m_stack[-1].append(s)
 
-    def _encode_value(self, nr, value):  # type: (int, any) -> bytes
+    def _encode_value(self, cls, nr, value):  # type: (int, int, any) -> bytes
         """Encode a value."""
+        if cls != Classes.Universal:
+            return value
         if nr in (Numbers.Integer, Numbers.Enumerated):
-            value = self._encode_integer(value)
-        elif nr in (Numbers.OctetString, Numbers.PrintableString):
-            value = self._encode_octet_string(value)
-        elif nr == Numbers.BitString:
-            value = self._encode_bit_string(value)
-        elif nr == Numbers.Boolean:
-            value = self._encode_boolean(value)
-        elif nr == Numbers.Null:
-            value = self._encode_null()
-        elif nr == Numbers.ObjectIdentifier:
-            value = self._encode_object_identifier(value)
+            return self._encode_integer(value)
+        if nr in (Numbers.OctetString, Numbers.PrintableString):
+            return self._encode_octet_string(value)
+        if nr == Numbers.BitString:
+            return self._encode_bit_string(value)
+        if nr == Numbers.Boolean:
+            return self._encode_boolean(value)
+        if nr == Numbers.Null:
+            return self._encode_null()
+        if nr == Numbers.ObjectIdentifier:
+            return self._encode_object_identifier(value)
         return value
 
     @staticmethod
@@ -434,7 +442,7 @@ class Decoder(object):
         length = self._read_length()
         if tagnr is None:
             tagnr = tag.nr
-        value = self._read_value(tagnr, length)
+        value = self._read_value(tag.cls, tagnr, length)
         self.m_tag = None
         return tag, value
 
@@ -519,10 +527,12 @@ class Decoder(object):
             length = byte
         return length
 
-    def _read_value(self, nr, length):  # type: (int, int) -> any
+    def _read_value(self, cls, nr, length):  # type: (int, int, int) -> any
         """Read a value from the input."""
         bytes_data = self._read_bytes(length)
-        if nr == Numbers.Boolean:
+        if cls != Classes.Universal:
+            value = bytes_data
+        elif nr == Numbers.Boolean:
             value = self._decode_boolean(bytes_data)
         elif nr in (Numbers.Integer, Numbers.Enumerated):
             value = self._decode_integer(bytes_data)
