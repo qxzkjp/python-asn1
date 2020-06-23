@@ -336,7 +336,7 @@ class TestEncoder(object):
         with pytest.raises(asn1.Error):
             enc.write(b'\x00\x01\x02\x03\x04', typ=asn1.Types.Primitive, cls=asn1.Classes.Context)
 
-    def test_context(self):
+    def test_context_with_tag_number_10(self):
         enc = asn1.Encoder()
         enc.start()
         enc.write(b'\x00\x01\x02\x03\x04', nr=10, typ=asn1.Types.Primitive, cls=asn1.Classes.Context)
@@ -711,7 +711,7 @@ class TestDecoder(object):
         assert val == -668929531791034950848739021124816874
         assert dec.eof()
 
-    def test_context(self):
+    def test_mix_context_universal(self):
         encoded = 'tYHKgAETgwgBgDgJAGMS9aQGgAQBAAAChQUAh7Mfc6YGgAQBAAABhwx0ZXN0LnRlc3Quc2WIAgEhqQigBoAECtiCBIsBAawuM' \
                   'CyCDAIjYh+TlkBYdGMQQIMBAIQBAIUBAoYJFwkVAClUKwAAiAgAIvIQAG0Yj40JFwkUIylUKwAAjgIOEI8BAJEBAZIJRENQMk' \
                   'dHU04xlQEAlgmRI3cAUGBTA/CXAgAAmAEAmwMi8hCdCFOTKXBYgkMQngECnx8CgAGfIAgAIvIQAG0Yjw=='
