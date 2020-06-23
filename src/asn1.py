@@ -25,7 +25,7 @@ from builtins import str
 from enum import IntEnum
 from numbers import Number
 
-__version__ = "2.3.1"
+__version__ = "2.4.0"
 
 
 class Numbers(IntEnum):

@@ -26,7 +26,7 @@ project = 'Python-ASN1'
 year = '2007-2020'
 author = 'Sebastien Andrivet'
 copyright = '{0}, {1}'.format(year, author)
-version = release = '2.3.1'
+version = release = '2.4.0'
 
 pygments_style = 'trac'
 templates_path = ['.']
