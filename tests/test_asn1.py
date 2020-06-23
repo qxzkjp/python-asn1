@@ -12,6 +12,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import base64
 from builtins import int
 
 import pytest
@@ -312,7 +313,7 @@ class TestEncoder(object):
         pytest.raises(asn1.Error, enc.write, 'foo', asn1.Numbers.ObjectIdentifier)
         pytest.raises(asn1.Error, enc.write, 'foo.bar', asn1.Numbers.ObjectIdentifier)
 
-    def test_default_encding(self):
+    def test_default_encoding(self):
         " Check that the encoder implicitly chooses the correct asn1 type "
         def check_defaults(value, number):
             default, explicit = asn1.Encoder(), asn1.Encoder()
@@ -328,6 +329,20 @@ class TestEncoder(object):
         check_defaults(b"byte string \x00\xff\xba\xdd", asn1.Numbers.OctetString)
         check_defaults(u"unicode string \U0001f4a9", asn1.Numbers.PrintableString)
         check_defaults(None, asn1.Numbers.Null)
+
+    def test_context_no_tag_number(self):
+        enc = asn1.Encoder()
+        enc.start()
+        with pytest.raises(asn1.Error):
+            enc.write(b'\x00\x01\x02\x03\x04', typ=asn1.Types.Primitive, cls=asn1.Classes.Context)
+
+    def test_context(self):
+        enc = asn1.Encoder()
+        enc.start()
+        enc.write(b'\x00\x01\x02\x03\x04', nr=10, typ=asn1.Types.Primitive, cls=asn1.Classes.Context)
+        res = enc.output()
+        assert res == b'\x8a\x05\x00\x01\x02\x03\x04'
+
 
 class TestDecoder(object):
     """Test suite for ASN1 Decoder."""
@@ -695,6 +710,242 @@ class TestDecoder(object):
         tag, val = dec.read()
         assert val == -668929531791034950848739021124816874
         assert dec.eof()
+
+    def test_context(self):
+        encoded = 'tYHKgAETgwgBgDgJAGMS9aQGgAQBAAAChQUAh7Mfc6YGgAQBAAABhwx0ZXN0LnRlc3Quc2WIAgEhqQigBoAECtiCBIsBAawuM' \
+                  'CyCDAIjYh+TlkBYdGMQQIMBAIQBAIUBAoYJFwkVAClUKwAAiAgAIvIQAG0Yj40JFwkUIylUKwAAjgIOEI8BAJEBAZIJRENQMk' \
+                  'dHU04xlQEAlgmRI3cAUGBTA/CXAgAAmAEAmwMi8hCdCFOTKXBYgkMQngECnx8CgAGfIAgAIvIQAG0Yjw=='
+        buf = base64.b64decode(encoded)
+
+        dec = asn1.Decoder()
+        dec.start(buf)
+
+        tag = dec.peek()
+        assert tag.typ == asn1.Types.Constructed
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 21
+
+        dec.enter()
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 0
+        assert value == b'\x13'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 3
+        assert value == b'\x01\x80\x38\x09\x00\x63\x12\xf5'
+
+        tag = dec.peek()
+        assert tag.typ == asn1.Types.Constructed
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 4
+
+        dec.enter()
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 0
+        assert value == b'\x01\x00\x00\x02'
+        dec.leave()
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 5
+        assert value == b'\x00\x87\xB3\x1F\x73'
+
+        tag = dec.peek()
+        assert tag.typ == asn1.Types.Constructed
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 6
+
+        dec.enter()
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 0
+        assert value == b'\x01\x00\x00\x01'
+        dec.leave()
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 7
+        assert value == b'test.test.se'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 8
+        assert value == b'\x01\x21'
+
+        tag = dec.peek()
+        assert tag.typ == asn1.Types.Constructed
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 9
+
+        dec.enter()
+
+        tag = dec.peek()
+        assert tag.typ == asn1.Types.Constructed
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 0
+
+        dec.enter()
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 0
+        assert value == b'\x0A\xD8\x82\x04'
+        dec.leave()
+        dec.leave()
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 11
+        assert value == b'\x01'
+
+        tag = dec.peek()
+        assert tag.typ == asn1.Types.Constructed
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 12
+
+        dec.enter()
+        tag = dec.peek()
+        assert tag.typ == asn1.Types.Constructed
+        assert tag.cls == asn1.Classes.Universal
+        assert tag.nr == 16
+
+        dec.enter()
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 2
+        assert value == b'\x02\x23\x62\x1F\x93\x96\x40\x58\x74\x63\x10\x40'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 3
+        assert value == b'\x00'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 4
+        assert value == b'\x00'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 5
+        assert value == b'\x02'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 6
+        assert value == b'\x17\x09\x15\x00\x29\x54\x2B\x00\x00'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 8
+        assert value == b'\x00\x22\xF2\x10\x00\x6D\x18\x8F'
+
+        dec.leave()
+        dec.leave()
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 13
+        assert value == b'\x17\x09\x14\x23\x29\x54\x2B\x00\x00'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 14
+        assert value == b'\x0E\x10'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 15
+        assert value == b'\x00'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 17
+        assert value == b'\x01'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 18
+        assert value == b'DCP2GGSN1'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 21
+        assert value == b'\x00'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 22
+        assert value == b'\x91\x23\x77\x00\x50\x60\x53\x03\xF0'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 23
+        assert value == b'\x00\x00'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 24
+        assert value == b'\x00'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 27
+        assert value == b'\x22\xF2\x10'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 29
+        assert value == b'\x53\x93\x29\x70\x58\x82\x43\x10'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 30
+        assert value == b'\x02'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 31
+        assert value == b'\x80\x01'
+
+        tag, value = dec.read()
+        assert tag.typ == asn1.Types.Primitive
+        assert tag.cls == asn1.Classes.Context
+        assert tag.nr == 32
+        assert value == b'\x00\x22\xF2\x10\x00\x6D\x18\x8F'
+
+        assert dec.peek() is None
+
 
 class TestEncoderDecoder(object):
     """Test suite for ASN1 Encoder and Decoder."""
