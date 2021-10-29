@@ -154,10 +154,10 @@ parser.set_default('mode', 'pem')
 (opts, args) = parser.parse_args()
 
 if opts.mode == 'pem':
-    input_file = open(sys.argv[1], 'r')
+    input_file = open(args[0], 'r')
     input_data = read_pem(input_file)
 else:
-    input_file = open(sys.argv[1], 'rb')
+    input_file = open(args[0], 'rb')
     input_data = input_file.read()
 
 if opts.output:
