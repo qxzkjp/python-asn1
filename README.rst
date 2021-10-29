@@ -1,6 +1,6 @@
 .. start-badges
 
-|travis| |appveyor| |requires| |codecov| |docs| |version| |wheel| |supported-versions| |supported-implementations|
+|travis| |appveyor| |codecov| |docs| |version| |wheel| |supported-versions| |supported-implementations|
 
 .. |docs| image:: https://readthedocs.org/projects/python-asn1/badge/?style=flat
     :target: https://readthedocs.org/projects/python-asn1
@@ -13,10 +13,6 @@
 .. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/andrivet/python-asn1?branch=master&svg=true
     :alt: AppVeyor Build Status
     :target: https://ci.appveyor.com/project/andrivet/python-asn1
-
-.. |requires| image:: https://requires.io/github/andrivet/python-asn1/requirements.svg?branch=master
-    :alt: Requirements Status
-    :target: https://requires.io/github/andrivet/python-asn1/requirements/?branch=master
 
 .. |codecov| image:: https://codecov.io/gh/andrivet/python-asn1/branch/master/graphs/badge.svg?branch=master
     :alt: Coverage Status
