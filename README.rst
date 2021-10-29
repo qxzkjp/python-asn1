@@ -1,6 +1,10 @@
 .. start-badges
 
-|version| |wheel| |supported-versions| |supported-implementations|
+|build| |version| |wheel| |supported-versions| |supported-implementations|
+
+.. |build| image:: https://github.com/andrivet/python-asn1/actions/workflows/tests.yml/badge.svg
+    :target: https://github.com/andrivet/python-asn1
+    :alt: GitHub Actions
 
 .. |docs| image:: https://readthedocs.org/projects/python-asn1/badge/?style=flat
     :target: https://readthedocs.org/projects/python-asn1
