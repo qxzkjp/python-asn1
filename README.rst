@@ -1,22 +1,10 @@
 .. start-badges
 
-|travis| |appveyor| |codecov| |docs| |version| |wheel| |supported-versions| |supported-implementations|
+|version| |wheel| |supported-versions| |supported-implementations|
 
 .. |docs| image:: https://readthedocs.org/projects/python-asn1/badge/?style=flat
     :target: https://readthedocs.org/projects/python-asn1
     :alt: Documentation Status
-
-.. |travis| image:: https://api.travis-ci.org/andrivet/python-asn1.svg?branch=master
-    :alt: Travis-CI Build Status
-    :target: https://travis-ci.org/andrivet/python-asn1
-
-.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/andrivet/python-asn1?branch=master&svg=true
-    :alt: AppVeyor Build Status
-    :target: https://ci.appveyor.com/project/andrivet/python-asn1
-
-.. |codecov| image:: https://codecov.io/gh/andrivet/python-asn1/branch/master/graphs/badge.svg?branch=master
-    :alt: Coverage Status
-    :target: https://codecov.io/github/andrivet/python-asn1
 
 .. |version| image:: https://img.shields.io/pypi/v/asn1.svg?style=flat
     :alt: PyPI Package latest release
