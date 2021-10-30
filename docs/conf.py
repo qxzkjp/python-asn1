@@ -23,7 +23,7 @@ if os.getenv('SPELLCHECK'):
 source_suffix = '.rst'
 master_doc = 'index'
 project = 'Python-ASN1'
-year = '2007-2020'
+year = '2007-2021'
 author = 'Sebastien Andrivet'
 copyright = '{0}, {1}'.format(year, author)
 version = release = '2.4.2'
