@@ -343,6 +343,20 @@ class TestEncoder(object):
         res = enc.output()
         assert res == b'\x8a\x05\x00\x01\x02\x03\x04'
 
+    def test_encoding_implicit_tag(self):
+        tag = asn1.Tag(5, asn1.Types.Primitive, asn1.Classes.Context)
+        enc = asn1.Encoder()
+        enc.start()
+        enc.write_tagged(tag, '1.2.840.113554.1.2.1.1', encodingNr=asn1.Numbers.ObjectIdentifier)
+        res = enc.output()
+        assert res == b'\x85\x0a\x2a\x86\x48\x86\xf7\x12\x01\x02\x01\x01'
+    
+    def test_encoding_implicit_universal_tag(self):
+        tag = asn1.Tag(asn1.Numbers.BitString, asn1.Types.Primitive, asn1.Classes.Universal)
+        enc = asn1.Encoder()
+        enc.start()
+        with pytest.raises(asn1.Error):
+            enc.write_tagged(tag, '1.2.840.113554.1.2.1.1', asn1.Numbers.ObjectIdentifier)
 
 class TestDecoder(object):
     """Test suite for ASN1 Decoder."""

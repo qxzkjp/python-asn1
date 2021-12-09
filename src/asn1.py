@@ -153,31 +153,77 @@ class Encoder(object):
         Raises:
             `Error`
         """
-        if self.m_stack is None:
-            raise Error('Encoder not initialized. Call start() first.')
-
         if typ is None:
             typ = Types.Primitive
         if cls is None:
             cls = Classes.Universal
 
-        if cls != Classes.Universal and nr is None:
+        if cls is None or cls == Classes.Universal:
+            nr = self._detect_type(value, nr)
+            encodingNr = nr
+        else:
+            encodingNr = None
+
+        tag = Tag(nr, typ, cls)
+        self.write_tagged(tag, value, encodingNr)
+
+    def write_tagged(self, tag, value, encodingNr=None): # type: (Tag, object, int) -> None
+        """This method encodes one ASN.1 value and writes it to the output buffer
+        Note:
+            this method is only needed if encoding an implicitly tagged primitive
+            value. If the value you're writing matches the type number it's being
+            tagged with, call Encoder.write() instead
+        
+        Args:
+            value (any): The value of the ASN.1 tag to write. Python-ASN1 will
+                try to autodetect the correct ASN.1 type from the type of
+                ``value``.
+
+            encodingNr (int): specifies the ASN.1 type to be used for encoding the
+                value. If given, this must be one of the numbers from asn1.Numbers, 
+                and is implicitly assumed to be from the universal class. If 
+                encodingNr is ``None``, then ``value`` must be a ``bytes`` value,
+                and is written into the ASN.1 stream directly
+
+            nr (int): The type number to use when creating the tag. This parameter
+                will not affect how the value is encoded
+
+            typ (int): This optional parameter can be used to write constructed
+                types to the output by setting it to indicate the constructed
+                encoding type. In this case, ``value`` must already be valid ASN.1
+                encoded data as plain Python bytes. This is not normally how
+                constructed types should be encoded though, see `Encoder.enter()`
+                and `Encoder.leave()` for the recommended way of doing this.
+                Use ``Types`` enumeration.
+
+            cls (int): This parameter can be used to override the class of the
+                ``value``. The default class is the universal class.
+                Use ``Classes`` enumeration.
+
+        Returns:
+            None
+
+        Raises:
+            `Error`
+        """
+        if self.m_stack is None:
+            raise Error('Encoder not initialized. Call start() first.')
+
+        if tag.cls is None or tag.typ is None or tag.nr is None:
+            raise Error('Incomplete tag passed to write_tagged')
+        if tag.typ is None:
+            tag.typ = Types.Primitive
+
+        if tag.cls != Classes.Universal and tag.nr is None:
             raise Error('Please specify a tag number (nr) when using classes Application, Context or Private')
 
-        if nr is None:
-            if isinstance(value, bool):
-                nr = Numbers.Boolean
-            elif isinstance(value, int):
-                nr = Numbers.Integer
-            elif isinstance(value, str):
-                nr = Numbers.PrintableString
-            elif isinstance(value, bytes):
-                nr = Numbers.OctetString
-            elif value is None:
-                nr = Numbers.Null
+        if tag.cls == Classes.Universal and encodingNr != tag.nr:
+            raise Error('Cannot implicitly tag a value when using the Universal class')
+        
+        if encodingNr is not None:
+            value = self._encode_value(Classes.Universal, encodingNr, value)
 
-        value = self._encode_value(cls, nr, value)
-        self._emit_tag(nr, typ, cls)
+        self._emit_tag(tag.nr, tag.typ, tag.cls)
         self._emit_length(len(value))
         self._emit(value)
 
@@ -278,6 +324,21 @@ class Encoder(object):
         if nr == Numbers.ObjectIdentifier:
             return self._encode_object_identifier(value)
         return value
+
+    def _detect_type(self, value, nr): # type: (any, int) -> int
+        if nr is None:
+            if isinstance(value, bool):
+                nr = Numbers.Boolean
+            elif isinstance(value, int):
+                nr = Numbers.Integer
+            elif isinstance(value, str):
+                nr = Numbers.PrintableString
+            elif isinstance(value, bytes):
+                nr = Numbers.OctetString
+            elif value is None:
+                nr = Numbers.Null
+
+        return nr
 
     @staticmethod
     def _encode_boolean(value):  # type: (bool) -> bytes
